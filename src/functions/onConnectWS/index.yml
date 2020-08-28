@@ -1,0 +1,6 @@
+test:
+  handler: src/functions/test/index.main
+  environment: ${file(ymls/env.yml):${self:provider.stage}}
+  events:
+    - websocket:
+        route: $connect

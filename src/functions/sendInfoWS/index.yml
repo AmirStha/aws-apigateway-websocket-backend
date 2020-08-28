@@ -1,0 +1,6 @@
+sendInfoWS:
+  handler: src/functions/sendInfoWS/index.main
+  environment: ${file(ymls/env.yml):${self:provider.stage}}
+  events:
+    - websocket:
+        route: sendInfo

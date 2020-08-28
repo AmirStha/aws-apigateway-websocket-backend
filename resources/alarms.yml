@@ -1,0 +1,34 @@
+Resources:
+  LambdaInvocationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: The Invocation alarm which will go off if the invocation count crosses ${self:custom.invocation_threshold} in 1 minute
+      AlarmActions:
+        - Fn::ImportValue: SNSTopicMonitorBottleLambda
+      MetricName: Invocations
+      Namespace: AWS/Lambda
+      Statistic: Sum
+      Period: "60"
+      EvaluationPeriods: "1"
+      Threshold: ${self:custom.invocation_threshold}
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: FunctionName
+          Value: ${self:service}-${opt:stage, self:custom.defaultStage}-hello
+
+  LambdaThrottlesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: The Invocation alarm which will go off if the function is throttled ${self:custom.throttled_count} times in 1 minute
+      AlarmActions:
+        - Fn::ImportValue: SNSTopicMonitorBottleLambda
+      MetricName: Throttles
+      Namespace: AWS/Lambda
+      Statistic: Sum
+      Period: "60"
+      EvaluationPeriods: "1"
+      Threshold: ${self:custom.throttled_count}
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: FunctionName
+          Value: ${self:service}-${opt:stage, self:custom.defaultStage}-hello
