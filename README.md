@@ -1,3 +1,13 @@
+### To connect to the endpoint
+
+Get the enpoint (in the enpoints section) via
+
+```
+sls info
+```
+
+Use any websocket client in the frontend
+
 #### Using this Lambda
 
 <!-- This Lambda function integrates with [**resource-monitoring-lambda**](https://gitlab.com/bottle-tech/bottle-library/resource-monitoring-lambda) to monitor **Invocations** and **Throttles** -->
