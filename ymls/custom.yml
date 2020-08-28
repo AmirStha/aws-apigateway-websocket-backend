@@ -18,13 +18,3 @@ prune: # automatically prune old lambda versions
   number: 3
 serverless-iam-role-per-function:
   defaultInherit: true # Each function will inherit the service level roles too.
-
-  iamRoleStatements:
-    - Effect: "Allow"
-      Action:
-        Action:
-          - logs:CreateLogGroup
-          - logs:CreateLogStream
-          - logs:PutLogEvents
-      Resource:
-        - "*"

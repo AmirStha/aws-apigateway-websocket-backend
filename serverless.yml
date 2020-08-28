@@ -26,6 +26,14 @@ provider:
   region: ${self:custom.region.${self:provider.stage}}
   deploymentBucket:
     name: bottle-smartad-serverless-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource:
+        - "*"
 
 functions:
   - ${file(src/functions/test/index.yml)}
