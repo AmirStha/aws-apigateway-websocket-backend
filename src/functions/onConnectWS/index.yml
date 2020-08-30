@@ -1,5 +1,5 @@
-test:
-  handler: src/functions/test/index.main
+onConnectWS:
+  handler: src/functions/onConnectWS/index.main
   environment: ${file(ymls/env.yml):${self:provider.stage}}
   events:
     - websocket:

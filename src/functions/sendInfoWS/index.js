@@ -1,13 +1,27 @@
 const AWS = require('aws-sdk');
+const dynamodbConverter = AWS.DynamoDB.Converter;
 
-const ddb = new AWS.DynamoDB.DocumentClient({
+const ddb = new AWS.DynamoDB({
   apiVersion: '2012-08-10',
   region: process.env.AWS_REGION,
 });
 
 const { TABLE_NAME } = process.env;
 
-module.exports.handler = async (event) => {
+const addConnection = (connectionId) => {
+  let connectionItemUnmarshalled = {
+    connectionId: `${connectionId}`,
+  };
+  let connectionItem = dynamodbConverter.marshall(connectionItemUnmarshalled);
+  const putParams = {
+    TableName: TABLE_NAME,
+    Item: connectionItem,
+  };
+
+  return ddb.putItem(putParams).promise();
+};
+
+module.exports.main = async (event) => {
   let connectionData;
 
   try {
@@ -24,10 +38,19 @@ module.exports.handler = async (event) => {
       event.requestContext.domainName + '/' + event.requestContext.stage,
   });
 
-  const postData = JSON.parse(event.body).data;
+  let postData;
+  try {
+    postData = JSON.parse(event.body).data;
+  } catch (e) {
+    return {
+      statusCode: 500,
+      body: e.stack,
+    };
+  }
 
-  const postCalls = connectionData.Items.map(async ({ connectionId }) => {
+  const postCalls = connectionData.Items.map(async (connectionItem) => {
     try {
+      let { connectionId } = dynamodbConverter.unmarshall(connectionItem);
       await apigwManagementApi
         .postToConnection({ ConnectionId: connectionId, Data: postData })
         .promise();
