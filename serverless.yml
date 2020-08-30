@@ -34,6 +34,20 @@ provider:
         - logs:PutLogEvents
       Resource:
         - "*"
+    - Effect: Allow
+      Action:
+        - "dynamodb:PutItem"
+        - "dynamodb:GetItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:Query"
+        - "dynamodb:Scan"
+      Resource:
+        - Fn::GetAtt: [WSClientConnectionTable, Arn]
+        - Fn::Join:
+            - "/"
+            - - Fn::GetAtt: [WSClientConnectionTable, Arn]
+              - "*"
 
 functions:
   - ${file(src/functions/test/index.yml)}
